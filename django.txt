@@ -1,0 +1,93 @@
+1. python орнату немеме болуы
+2. проект үшін орналасатын жерінен папка ашу
+3. сол жерге venv орнату және іске қосу
+(python -m venv .venv  Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force ./.venv/Scripts/Activate.ps1)
+
+4. django орнату
+5. проект ашу: django-admin startproject password_generator
+6. проект жүргізу сервер арқылы: cd password_generator
+				python manage.py runserver
+7. Cтруктура проекта: проект ашылған папка --> 1. manage.py - проектіні басқару файлы
+					       2. db.sqlite3 - деректер қоры
+					       3. password_generator --> __pycache__ - кэш файлдар
+									ashi.py, wsgi.py - серверге койғанда керек
+									__init__.py - настройка функции
+									settings.py - негізгі настройкалар 
+									urls.py - сайт адресі коиылады
+8. приложение құру: 1. проект ішінде құрылады: password_generator> python manage.py startapp generator
+9. приложениені іске қосу: password_generator>password_generator>settings.py - INSTALLED_APPS: 'generator',
+10. urls-пен жұмыс: 
+	localhost:8000-да
+	1. password_generator>urls.py:
+	from generator import views
+
+		urlpatterns = [
+	  	path('', views.home)
+		]	
+	2. generator>views.py:
+		from django import HttpResponse 
+		def home(request):
+		    return HttpResponse('Hello world')
+
+11. Шаблоны: 
+	1. generator>mkdir templates>mkdir generator> touch home.html> <h1> sucks </h1>
+	2. generator> views.py > def home(request):
+					return render(request, 'generator/home.html')
+	перезапуск
+	
+	2. generator> views.py > def home(request):
+					return render(request, 'generator/home.html', {'password':'12sd1as2d3'})
+
+				home.htmml> 	<h1> sucks </h1>
+						{{ password }}
+
+12. формы (front-end):home.htmml 
+	1. 
+	<h1> Password generator </h1>
+	<form action="">
+	  <select name="length">
+		<option value='6'>6</option>
+		<option value='6'>6</option>
+		<option value='6'>6</option>
+		<option value='6'>9</option>		  
+	</select>
+	<input type="submit" value ="Generate password">
+
+	</form>
+	2. password_generator>urls.py
+	path('password/',views.password)
+	3. password_genenrator>generator:
+		def password(request):	
+			return render(request,'generator/password.html')
+	4. generator>templates>generator> touch password.html>  123sucks
+	5. 1-нші шагтағы action: <form action="password">
+	6. url өзгерту> generatepassword 
+		1. password_generator>urls.py
+		   path('generatedpassword/',views.password, name='password')
+		2. >home.htmml> form action = {% url 'password' %} 
+
+13. генерация случайного пароля: 
+    >home.html>
+	1. по умолчанию таңдалып тұру үшін: <option value='6' selected='selected'>6</option>
+	2. <br>
+	   <input type='checkbox' name = 'uppercase'> Uppercase	
+	   <br>
+	   <input type='checkbox' name = 'numbers'> Numbers
+	   <br>
+	   <input type='checkbox' name = 'special'> Special
+	   <br>
+	3. generator>views.py:
+		def password(request):
+			thepassword = 'testing'
+			return render(request,'generator/password.html',{'password': thepassword})
+	4. password.html> осы ғана:
+		<h2> your password is:</h2>
+		<h3> {{ password }} </h3>
+	5. generator>views.py: screen code:
+	6. артқа қайтатын ссылка қою: home.html-да соңғы SCREEN CODE>
+	сосын password_generator>urls.py:
+		from generator import views
+
+		urlpatterns = [
+	  	path('', views.home, name = 'home')
+		]	
